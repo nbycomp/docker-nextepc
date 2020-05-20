@@ -7,6 +7,9 @@ RUN apt-get -yq dist-upgrade
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
+        libcurl4-openssl-dev \
+        libmicrohttpd-dev \
+        cmake \
         python3-pip \
         python3-setuptools \
         python3-wheel \
