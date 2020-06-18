@@ -12,7 +12,7 @@ services:
     network_mode: host
 
   webui:
-    build: ./
+    image: registry.nearbycomputing.com/nbycomp/open5gs  
     depends_on:
       - mongodb
     environment:
@@ -42,7 +42,7 @@ services:
       - /tmp/run.sh
 
   hss:
-    build: ./
+    image: registry.nearbycomputing.com/nbycomp/open5gs  
     depends_on:
       - mongodb
     container_name: hss
@@ -54,7 +54,7 @@ services:
       - "./config-standalone:/usr/local/etc:z"
       
   mme:
-     build: ./
+     image: registry.nearbycomputing.com/nbycomp/open5gs  
      depends_on:
        - hss
      container_name: mme
@@ -66,7 +66,7 @@ services:
       - "./config-standalone:/usr/local/etc:z"
 
   sgw:
-     build: ./
+     image: registry.nearbycomputing.com/nbycomp/open5gs  
      container_name: sgw
      network_mode: host
      entrypoint:
@@ -76,7 +76,7 @@ services:
       - "./config-standalone:/usr/local/etc:z"
 
   pgw:
-     build: ./
+     image: registry.nearbycomputing.com/nbycomp/open5gs  
      container_name: pgw
      network_mode: host
      entrypoint:
@@ -91,7 +91,7 @@ services:
        -  NET_ADMIN
       
   pcrf:
-    build: ./
+    image: registry.nearbycomputing.com/nbycomp/open5gs  
     depends_on:
        - mongodb
        - hss
@@ -102,4 +102,3 @@ services:
       - "/usr/local/etc/run_pcrf.sh"
     volumes:
       - "./config-standalone:/usr/local/etc:z"
-

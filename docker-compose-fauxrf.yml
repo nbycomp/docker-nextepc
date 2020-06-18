@@ -1,7 +1,7 @@
-version: '2'
+version: "2"
 
 volumes:
- mongodb_data:
+  mongodb_data:
 
 networks:
   core_network:
@@ -27,7 +27,7 @@ services:
         ipv4_address: 192.168.26.5
 
   webui:
-    build: ./
+    image: registry.nearbycomputing.com/nbycomp/open5gs
     depends_on:
       - mongodb
     environment:
@@ -37,7 +37,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-        - "./config:/usr/local/etc:z"
+      - "./config:/usr/local/etc:z"
     entrypoint:
       - "/bin/sh"
       - "/usr/local/etc/run_webui.sh"
@@ -62,7 +62,7 @@ services:
         ipv4_address: 192.168.26.19
 
   hss:
-    build: ./
+    image: registry.nearbycomputing.com/nbycomp/open5gs
     depends_on:
       - mongodb
     container_name: hss
@@ -77,55 +77,55 @@ services:
         ipv4_address: 192.168.26.10
 
   mme:
-     build: ./
-     depends_on:
-       - hss
-     container_name: mme
-     hostname: mme
-     entrypoint:
+    image: registry.nearbycomputing.com/nbycomp/open5gs
+    depends_on:
+      - hss
+    container_name: mme
+    hostname: mme
+    entrypoint:
       - "/bin/sh"
       - "/usr/local/etc/run_mme.sh"
-     volumes:
+    volumes:
       - "./config:/usr/local/etc:z"
-     networks:
-       core_network:
-         ipv4_address: 192.168.26.20
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.20
 
   sgw:
-     build: ./
-     container_name: sgw
-     hostname: sgw
-     entrypoint:
+    image: registry.nearbycomputing.com/nbycomp/open5gs
+    container_name: sgw
+    hostname: sgw
+    entrypoint:
       - "/bin/sh"
       - "/usr/local/etc/run_sgw.sh"
-     volumes:
+    volumes:
       - "./config:/usr/local/etc:z"
-     networks:
-       core_network:
-         ipv4_address: 192.168.26.30
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.30
 
   pgw:
-     build: ./
-     container_name: pgw
-     hostname: pgw
-     entrypoint:
+    image: registry.nearbycomputing.com/nbycomp/open5gs
+    container_name: pgw
+    hostname: pgw
+    entrypoint:
       - "/bin/sh"
       - "/usr/local/etc/run_pgw.sh"
-     volumes:
+    volumes:
       - "./config:/usr/local/etc:z"
-     cap_add:
-       -  NET_ADMIN
-     devices:
-       -  /dev/net/tun
-     networks:
-       core_network:
-         ipv4_address: 192.168.26.40
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    networks:
+      core_network:
+        ipv4_address: 192.168.26.40
 
   pcrf:
-    build: ./
+    image: registry.nearbycomputing.com/nbycomp/open5gs
     depends_on:
-       - mongodb
-       - hss
+      - mongodb
+      - hss
     container_name: pcrf
     hostname: pcrf
     entrypoint:
@@ -134,20 +134,20 @@ services:
     volumes:
       - "./config:/usr/local/etc:z"
     networks:
-       core_network:
-         ipv4_address: 192.168.26.50
+      core_network:
+        ipv4_address: 192.168.26.50
 
   enb:
-    build: ./srsLTE-fauxRF
+    image: registry.nearbycomputing.com/nbycomp/srslte-fauxrf
     container_name: enb
     depends_on:
       - mme
-    ipc: shareable 
+    ipc: shareable
     cap_add:
       - SYS_NICE
     networks:
       core_network:
-         ipv4_address: 192.168.26.60
+        ipv4_address: 192.168.26.60
     volumes:
       - ./srsLTE-fauxRF/run_enb.sh:/root/run_enb.sh:z
     entrypoint:
@@ -156,7 +156,7 @@ services:
 
   ue:
     container_name: ue
-    build: ./srsLTE-fauxRF
+    image: registry.nearbycomputing.com/nbycomp/srslte-fauxrf
     ipc: "container:enb"
     cap_add:
       - NET_ADMIN
@@ -171,5 +171,3 @@ services:
     entrypoint:
       - /bin/sh
       - /root/run_ue.sh
-
-
