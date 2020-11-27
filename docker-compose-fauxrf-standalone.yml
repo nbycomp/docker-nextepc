@@ -1,0 +1,33 @@
+version: "2"
+
+services:
+  enb:
+    image: registry.nearbycomputing.com/nbycomp/srslte-fauxrf
+    container_name: enb
+    ipc: shareable
+    cap_add:
+      - SYS_NICE
+    network_mode: host
+    volumes:
+      - ./srsLTE-fauxRF/run_enb_standalone.sh:/root/run_enb.sh:z
+    entrypoint:
+      - /bin/sh
+      - /root/run_enb.sh
+
+  ue:
+    container_name: ue
+    image: registry.nearbycomputing.com/nbycomp/srslte-fauxrf
+    ipc: "container:enb"
+    cap_add:
+      - NET_ADMIN
+      - SYS_NICE
+    devices:
+      - /dev/net/tun
+    network_mode: "none"
+    depends_on:
+      - enb
+    volumes:
+      - ./srsLTE-fauxRF/run_ue.sh:/root/run_ue.sh:z
+    entrypoint:
+      - /bin/sh
+      - /root/run_ue.sh
